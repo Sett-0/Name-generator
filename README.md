@@ -1,2 +1,1 @@
-"Name-generator" 
-"# Name generator" 
+# Name generator 
