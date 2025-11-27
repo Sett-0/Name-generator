@@ -1,8 +1,10 @@
 from random import choice
 import argparse as ap 
 
+def tuple_type(string): 
+    string = ''.join(filter(lambda ch: ch not in '( )', string))
+    return tuple(map(int, string.split(',')))
 parser = ap.ArgumentParser()
-tuple_type = lambda s: tuple(map(int, filter(lambda ch: ch not in '(, )', s)))
 parser.add_argument('--word_len', type=tuple_type, default=(3,7), help='Word length (min, max). Ex. (4,8), (4,4). Default = (3,7)')
 parser.add_argument('--num_words', type=int, default=1, help='Number of words in a line. Default = 1')
 parser.add_argument('--num_tries', type=int, default=15, help='Number of lines to generate. Default = 15')
@@ -17,9 +19,12 @@ vows = {'a', 'e', 'i', 'o', 'u'}
 cons = letters - vows
 cons, vows = list(cons), list(vows)
 
+lines = []
+saved = []
+indent = len(str(num_tries)) - 1
 for i in range(num_tries):
-    words = ['' for _ in range(num_words)]
-    for i, word in enumerate(words):
+    lines.append(['' for _ in range(num_words)])
+    for j, word in enumerate(lines[i]):
         word_len = choice(word_lens)
         for _ in range(word_len // 2):
             if (choice([0,1])): word += choice(cons) + choice(vows)
@@ -27,6 +32,6 @@ for i in range(num_tries):
         if (word_len % 2):
             if (choice([0,1])): word += choice(cons)
             else:              word += choice(vows)
-        words[i] = word
-    for word in words: print(word, end=' ')
-    print()
+        lines[i][j] = word
+    print(f'{i+1}.{" "*(indent-(i+1)//10)}', ' '.join(lines[i]))
+    #to_save = 
