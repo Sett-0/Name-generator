@@ -2,8 +2,14 @@ from random import choice
 import argparse as ap 
 
 def tuple_type(string): 
-    string = ''.join(filter(lambda ch: ch not in '( )', string))
-    return tuple(map(int, string.split(',')))
+    splitter = ','
+    chars = '()'
+    if (string.find(splitter) != -1): chars += ' '
+    else:                             splitter = ' '
+    string = ''.join(filter(lambda ch: ch not in chars, string))
+    if not string: return tuple()
+    return tuple(map(int, string.split(splitter)))
+
 parser = ap.ArgumentParser()
 parser.add_argument('--word_len', type=tuple_type, default=(3,7), help='Word length (min, max). Ex. (4,8), (4,4). Default = (3,7)')
 parser.add_argument('--num_words', type=int, default=1, help='Number of words in a line. Default = 1')
@@ -34,4 +40,6 @@ for i in range(num_tries):
             else:              word += choice(vows)
         lines[i][j] = word
     print(f'{i+1}.{" "*(indent-(i+1)//10)}', ' '.join(lines[i]))
-    #to_save = 
+to_save = tuple_type(input("Enter line numbers to save: "))
+saved = [' '.join(lines[i-1])+'\n' for i in to_save]
+with open('saved_words.txt', 'a') as f: f.writelines(saved)
